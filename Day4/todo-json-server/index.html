@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo List with Modal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body
+    class="bg-gradient-to-r from-blue-300 to-blue-500 min-h-screen flex flex-col items-center"
+  >
+    <header class="text-white text-3xl font-bold mt-10">Todo List</header>
+    <p
+      id="addTodoText"
+      class="mt-8 text-white text-lg cursor-pointer hover:text-gray-200"
+    >
+      + Add Todo
+    </p>
+    <form class="flex items-center mt-4 space-x-4">
+      <select
+        name="todos"
+        class="filter-todo bg-white p-2 rounded border border-gray-300"
+      >
+        <option value="all">All</option>
+        <option value="completed">Completed</option>
+        <option value="uncompleted">Uncompleted</option>
+      </select>
+    </form>
+
+    <div class="todo-container mt-8 w-full max-w-xl">
+      <ul class="todo-list space-y-4"></ul>
+    </div>
+
+    <div
+      id="todoModal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"
+    >
+      <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
+        <h2 class="text-xl font-bold mb-4">Add a new task</h2>
+        <input
+          id="modalTodoInput"
+          type="text"
+          class="w-full border-2 border-gray-300 rounded-lg p-2 mb-4 focus:outline-none"
+          placeholder="Enter your task..."
+        />
+        <div class="flex justify-end space-x-4">
+          <button
+            id="closeModal"
+            class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+          >
+            Cancel
+          </button>
+          <button
+            id="saveModalTodo"
+            class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+          >
+            Add Task
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
