@@ -32,8 +32,20 @@
       </select>
     </form>
 
-    <div class="todo-container mt-8 w-full max-w-xl">
+    <!-- <div class="todo-container mt-8 w-full max-w-xl">
       <ul class="todo-list space-y-4"></ul>
+    </div> -->
+    <div class="todo-container mt-8 w-full max-w-xl">
+      <table class="todo-table w-full border-collapse border border-gray-300">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="border border-gray-300 px-4 py-2">SN</th>
+            <th class="border border-gray-300 px-4 py-2">Todo</th>
+            <th class="border border-gray-300 px-4 py-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="todo-list"></tbody>
+      </table>
     </div>
 
     <div
@@ -64,7 +76,7 @@
         </div>
       </div>
     </div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

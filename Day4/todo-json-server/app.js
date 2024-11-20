@@ -25,14 +25,42 @@ saveModalTodo.addEventListener("click", addTodo);
 todoList.addEventListener("click", handleTodoClick);
 
 // todo from server
+
 async function loadTodos() {
   try {
     const response = await fetch(apiUrl);
     const todos = await response.json();
 
-    todos.forEach((todo) => {
-      const todoDiv = createTodoElement(todo);
-      todoList.appendChild(todoDiv);
+    todos.sort((a, b) => a.order - b.order || a.id - b.id);
+
+    todos.forEach((todo, index) => {
+      const todoRow = createTodoElement(todo, index);
+      todoList.appendChild(todoRow);
+    });
+
+    new Sortable(todoList, {
+      animation: 150,
+      ghostClass: "sortable-ghost",
+      onEnd: async () => {
+        const reorderedTodos = Array.from(todoList.children).map(
+          (todo, index) => ({
+            id: todo.dataset.id,
+            order: index,
+          })
+        );
+
+        for (const todo of reorderedTodos) {
+          await fetch(`${apiUrl}/${todo.id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ order: todo.order }),
+          });
+        }
+
+        Array.from(todoList.children).forEach((row, index) => {
+          row.firstChild.textContent = index + 1;
+        });
+      },
     });
   } catch (error) {
     console.error("Failed to load todos:", error);
@@ -40,11 +68,16 @@ async function loadTodos() {
 }
 
 // add todos
+
 async function addTodo() {
   const todoText = modalTodoInput.value.trim();
   if (!todoText) return;
 
-  const newTodo = { text: todoText, completed: false };
+  const newTodo = {
+    text: todoText,
+    completed: false,
+    order: todoList.children.length,
+  };
 
   try {
     const response = await fetch(apiUrl, {
@@ -54,8 +87,9 @@ async function addTodo() {
     });
     const savedTodo = await response.json();
 
-    const todoDiv = createTodoElement(savedTodo);
-    todoList.appendChild(todoDiv);
+    const todoRow = createTodoElement(savedTodo, todoList.children.length);
+    todoList.appendChild(todoRow);
+
     modalTodoInput.value = "";
     todoModal.classList.add("hidden");
   } catch (error) {
@@ -63,39 +97,55 @@ async function addTodo() {
   }
 }
 
-function createTodoElement(todo) {
-  const todoDiv = document.createElement("div");
-  todoDiv.classList.add(
-    "todo",
-    "flex",
-    "justify-between",
-    "items-center",
-    "bg-white",
-    "p-4",
-    "rounded-lg",
-    "shadow-lg",
-    "transition-transform",
-    "duration-300"
+function createTodoElement(todo, index) {
+  const todoRow = document.createElement("tr");
+  todoRow.classList.add("todo", "bg-white", "hover:bg-gray-100", "transition");
+  todoRow.dataset.id = todo.id;
+
+  const snCell = document.createElement("td");
+  snCell.classList.add(
+    "border",
+    "border-gray-300",
+    "px-4",
+    "py-2",
+    "text-center"
   );
-  todoDiv.dataset.id = todo.id;
+  snCell.textContent = index + 1;
+  todoRow.appendChild(snCell);
 
-  const newTodo = document.createElement("li");
-  newTodo.innerText = todo.text;
-  newTodo.classList.add("todo-item", "flex-1");
-  todoDiv.appendChild(newTodo);
+  const todoCell = document.createElement("td");
+  todoCell.classList.add("border", "border-gray-300", "px-4", "py-2");
+  const todoText = document.createElement("span");
+  todoText.textContent = todo.text;
 
-  todoDiv.appendChild(
+  if (todo.completed) {
+    todoText.classList.add("line-through", "opacity-50");
+  }
+
+  todoCell.appendChild(todoText);
+  todoRow.appendChild(todoCell);
+
+  const actionsCell = document.createElement("td");
+  actionsCell.classList.add(
+    "border",
+    "border-gray-300",
+    "px-1",
+    "py-2",
+    "text-center",
+    "space-x-8"
+  );
+
+  actionsCell.appendChild(
     createButton("fas fa-check", "complete-btn bg-green-500 hover:bg-green-600")
   );
-  todoDiv.appendChild(
+
+  actionsCell.appendChild(
     createButton("fas fa-trash", "trash-btn bg-red-500 hover:bg-red-600")
   );
 
-  if (todo.completed) {
-    todoDiv.classList.add("completed", "line-through", "opacity-50");
-  }
+  todoRow.appendChild(actionsCell);
 
-  return todoDiv;
+  return todoRow;
 }
 
 function createButton(iconClass, btnClass) {
@@ -111,12 +161,11 @@ async function handleTodoClick(event) {
   const button = event.target.closest("button");
   if (!button) return;
 
-  const todoDiv = button.closest(".todo");
-  const todoId = todoDiv.dataset.id;
-
+  const todoRow = button.closest(".todo");
+  const todoId = todoRow.dataset.id;
   if (button.classList.contains("trash-btn")) {
-    todoDiv.classList.add("opacity-0", "translate-x-4");
-    setTimeout(() => todoDiv.remove(), 300);
+    todoRow.classList.add("opacity-0", "translate-x-4");
+    setTimeout(() => todoRow.remove(), 300);
 
     try {
       await fetch(`${apiUrl}/${todoId}`, { method: "DELETE" });
@@ -126,19 +175,22 @@ async function handleTodoClick(event) {
   }
 
   if (button.classList.contains("complete-btn")) {
-    todoDiv.classList.toggle("completed");
-    todoDiv.classList.toggle("line-through");
-    todoDiv.classList.toggle("opacity-50");
+    const todoText = todoRow.querySelector("td:nth-child(2) span");
+    const isCurrentlyCompleted = todoText.classList.contains("line-through");
 
-    const isCompleted = todoDiv.classList.contains("completed");
+    todoText.classList.toggle("line-through");
+    todoText.classList.toggle("opacity-50");
+
     try {
       await fetch(`${apiUrl}/${todoId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ completed: isCompleted }),
+        body: JSON.stringify({ completed: !isCurrentlyCompleted }),
       });
     } catch (error) {
       console.error("Failed to update todo:", error);
+      todoText.classList.toggle("line-through");
+      todoText.classList.toggle("opacity-50");
     }
   }
 }
@@ -148,12 +200,14 @@ async function filterTodo() {
   const filterValue = filterOption.value;
 
   [...todos].forEach((todo) => {
-    const isCompleted = todo.classList.contains("completed");
+    const todoText = todo.querySelector("td:nth-child(2) span");
+    const isCompleted = todoText && todoText.classList.contains("line-through");
+
     todo.style.display =
       filterValue === "all" ||
       (filterValue === "completed" && isCompleted) ||
       (filterValue === "uncompleted" && !isCompleted)
-        ? "flex"
+        ? "table-row"
         : "none";
   });
 }
