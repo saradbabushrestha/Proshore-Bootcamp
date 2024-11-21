@@ -15,12 +15,14 @@
     class="bg-gradient-to-r from-blue-300 to-blue-500 min-h-screen flex flex-col items-center"
   >
     <header class="text-white text-3xl font-bold mt-10">Todo List</header>
+
     <p
       id="addTodoText"
       class="mt-8 text-white text-lg cursor-pointer hover:text-gray-200"
     >
       + Add Todo
     </p>
+
     <form class="flex items-center mt-4 space-x-4">
       <select
         name="todos"
@@ -32,7 +34,7 @@
       </select>
     </form>
 
-    <div class="todo-container mt-8 w-full max-w-xl">
+    <div class="todo-container mt-8 w-full max-w-xl max-h-96 overflow-y-auto">
       <table class="todo-table w-full border-collapse border border-gray-300">
         <thead>
           <tr class="bg-gray-200">
@@ -45,6 +47,7 @@
       </table>
     </div>
 
+    <!-- Modal -->
     <div
       id="todoModal"
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"
@@ -73,6 +76,7 @@
         </div>
       </div>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
     <script type="module" src="main.js"></script>
   </body>

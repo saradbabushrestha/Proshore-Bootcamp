@@ -14,10 +14,10 @@ export function createTodoElement(todo, index) {
     "text-center"
   );
   snCell.textContent = index + 1;
-  todoRow.appendChild(snCell);
 
   const todoCell = document.createElement("td");
   todoCell.classList.add("border", "border-gray-300", "px-4", "py-2");
+
   const todoText = document.createElement("span");
   todoText.textContent = todo.text;
 
@@ -26,7 +26,6 @@ export function createTodoElement(todo, index) {
   }
 
   todoCell.appendChild(todoText);
-  todoRow.appendChild(todoCell);
 
   const actionsCell = document.createElement("td");
   actionsCell.classList.add(
@@ -38,15 +37,15 @@ export function createTodoElement(todo, index) {
     "space-x-8"
   );
 
-  actionsCell.appendChild(
-    createButton("fas fa-check", "complete-btn bg-green-500 hover:bg-green-600")
-  );
-
-  actionsCell.appendChild(
+  actionsCell.append(
+    createButton(
+      "fas fa-check",
+      "complete-btn bg-green-500 hover:bg-green-600"
+    ),
     createButton("fas fa-trash", "trash-btn bg-red-500 hover:bg-red-600")
   );
 
-  todoRow.appendChild(actionsCell);
+  todoRow.append(snCell, todoCell, actionsCell);
 
   return todoRow;
 }
