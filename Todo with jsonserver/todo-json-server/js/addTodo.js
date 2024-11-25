@@ -1,7 +1,7 @@
 import { createTodoElement } from "./createTodoElement.js";
 
 export async function addTodo(apiUrl, todoList, modalTodoInput, todoModal) {
-  const todoText = modalTodoInput.value.trim();
+  const todoText = modalTodoInput.value.trim(); //to get user input
   if (!todoText) return;
 
   const newTodo = {
@@ -21,7 +21,7 @@ export async function addTodo(apiUrl, todoList, modalTodoInput, todoModal) {
 
     const savedTodo = await response.json();
     const todoRow = createTodoElement(savedTodo, todoList.children.length);
-    todoList.appendChild(todoRow);
+    todoList.appendChild(todoRow); //add todo to list or Ui uodate
 
     modalTodoInput.value = "";
     todoModal.classList.add("hidden");

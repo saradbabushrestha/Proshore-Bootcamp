@@ -4,8 +4,8 @@ export async function handleTodoClick(event, apiUrl, todoList) {
   const button = event.target.closest("button");
   if (!button) return;
 
-  const todoRow = button.closest(".todo");
-  const todoId = todoRow.dataset.id;
+  const todoRow = button.closest(".todo"); //todo rows find garne containing the clicked btn
+  const todoId = todoRow.dataset.id; //retrv id
 
   const updateTodoStatus = async (completed) => {
     try {
@@ -23,7 +23,7 @@ export async function handleTodoClick(event, apiUrl, todoList) {
   //  Delete
   if (button.classList.contains("trash-btn")) {
     todoRow.classList.add("opacity-0", "translate-x-4");
-    setTimeout(() => todoRow.remove(), 300);
+    setTimeout(() => todoRow.remove(), 300); //animation lai timeout garya
 
     try {
       await fetch(`${apiUrl}/${todoId}`, { method: "DELETE" });

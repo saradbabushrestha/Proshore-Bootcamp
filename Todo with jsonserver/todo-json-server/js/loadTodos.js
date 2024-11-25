@@ -27,7 +27,6 @@ export async function loadTodos(apiUrl, todoList) {
           })
         );
 
-        //update odered list
         await Promise.all(
           reorderedTodos.map((todo) =>
             fetch(`${apiUrl}/${todo.id}`, {

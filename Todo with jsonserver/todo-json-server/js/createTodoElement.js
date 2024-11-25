@@ -15,10 +15,10 @@ export function createTodoElement(todo, index) {
   );
   snCell.textContent = index + 1;
 
-  const todoCell = document.createElement("td");
+  const todoCell = document.createElement("td"); //new td fot todo text is created
   todoCell.classList.add("border", "border-gray-300", "px-4", "py-2");
 
-  const todoText = document.createElement("span");
+  const todoText = document.createElement("span"); //holds the todo text
   todoText.textContent = todo.text;
 
   if (todo.completed) {
