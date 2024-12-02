@@ -1,4 +1,11 @@
+import React from "react";
 import { useFormik } from "formik";
+import * as Yup from "yup";
+
+import TextInput from "../components/TextInput.jsx";
+import SelectInput from "../components/SelectInput.jsx";
+import RadioGroup from "../components/RadioGroup.jsx";
+import Checkbox from "../components/Checkbox.jsx";
 
 export const SignupForm = ({ onSubmit }) => {
   const formik = useFormik({
@@ -6,14 +13,44 @@ export const SignupForm = ({ onSubmit }) => {
       firstName: "",
       lastName: "",
       email: "",
-      favouriteTeam: "",
+      team: "",
       gender: "",
       password: "",
       confirmpassword: "",
+      agreeToTerms: false,
     },
+    validationSchema: Yup.object({
+      firstName: Yup.string().required("First Name is required").min(2),
+      lastName: Yup.string().required("Last Name is required").min(2),
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required"),
+      team: Yup.string().required("Please select a favorite team"),
+      gender: Yup.string().required("Please select your gender"),
+      password: Yup.string()
+        .required("Password is required")
+        .min(8, "Password must be at least 8 characters"),
+      confirmpassword: Yup.string()
+        .oneOf([Yup.ref("password")], "Passwords must match")
+        .required("Confirm Password is required"),
+      agreeToTerms: Yup.bool().oneOf([true], "You must accept the terms"),
+    }),
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      const userData = {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        team: values.team,
+        gender: values.gender,
+        password: values.password,
+      };
+
+      localStorage.setItem("userData", JSON.stringify(userData));
+
+      alert("Signup successful! Data saved to local storage.");
+
       formik.resetForm();
+
       onSubmit();
     },
   });
@@ -23,138 +60,60 @@ export const SignupForm = ({ onSubmit }) => {
       onSubmit={formik.handleSubmit}
       className="max-w-md mx-auto p-6 rounded-lg shadow-md space-y-4 backdrop-blur-lg bg-opacity-40"
     >
-      <div>
-        <h1 className="text-3xl font-bold text-center text-white mb-6">
-          Fantasy NPL Signup Form
-        </h1>
-        <label
-          htmlFor="firstName"
-          className="block text-white font-medium mb-1"
-        >
-          First Name
-        </label>
-        <input
-          id="firstName"
-          name="firstName"
-          type="text"
-          onChange={formik.handleChange}
-          value={formik.values.firstName}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-      <div>
-        <label htmlFor="lastName" className="block text-white font-medium mb-1">
-          Last Name
-        </label>
-        <input
-          id="lastName"
-          name="lastName"
-          type="text"
-          onChange={formik.handleChange}
-          value={formik.values.lastName}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-      <div>
-        <label htmlFor="email" className="block text-white font-medium mb-1">
-          Email Address
-        </label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          onChange={formik.handleChange}
-          value={formik.values.email}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-      <div>
-        <label htmlFor="team" className="block text-white font-medium mb-1">
-          Favourite Team
-        </label>
-        <select
-          id="team"
-          name="team"
-          onChange={formik.handleChange}
-          value={formik.values.team}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="" disabled>
-            Select your team
-          </option>
-          <option value="Kathmandu Rayzrs">Kathmandu Rayzrs</option>
-          <option value="Biratnagar City FC">Biratnagar City FC</option>
-          <option value="Lalitpur City FC">Lalitpur City FC</option>
-          <option value="Pokhara Thunders">Pokhara Thunders</option>
-          <option value="Dhangadhi FC">Dhangadhi FC</option>
-          <option value="Chitwan FC">Chitwan FC</option>
-          <option value="Butwal Lumbini FC">Butwal Lumbini FC</option>
-          <option value="FC Far West">FC Far West</option>
-        </select>
-      </div>
-      <div>
-        <label htmlFor="password" className="block text-white font-medium mb-1">
-          Password
-        </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          onChange={formik.handleChange}
-          value={formik.values.password}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-      <div>
-        <label
-          htmlFor="confirmpassword"
-          className="block text-white font-medium mb-1"
-        >
-          Confirm Password
-        </label>
-        <input
-          id="confirmpassword"
-          name="confirmpassword"
-          type="password"
-          onChange={formik.handleChange}
-          value={formik.values.confirmpassword}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-      <div>
-        <label className="block text-white font-medium mb-1">Gender</label>
-        <div className="flex space-x-4">
-          <div className="flex items-center">
-            <input
-              id="male"
-              name="gender"
-              type="radio"
-              value="Male"
-              onChange={formik.handleChange}
-              checked={formik.values.gender === "Male"}
-              className="h-4 w-4 text-blue-500 border-gray-300 focus:ring-2 focus:ring-blue-500"
-            />
-            <label htmlFor="male" className="ml-2 text-white">
-              Male
-            </label>
-          </div>
-          <div className="flex items-center">
-            <input
-              id="female"
-              name="gender"
-              type="radio"
-              value="Female"
-              onChange={formik.handleChange}
-              checked={formik.values.gender === "Female"}
-              className="h-4 w-4 text-pink-500 border-gray-300 focus:ring-2 focus:ring-pink-500"
-            />
-            <label htmlFor="female" className="ml-2 text-white">
-              Female
-            </label>
-          </div>
-        </div>
-      </div>
-
+      <h1 className="text-3xl font-bold text-center text-white mb-6">
+        Fantasy NPL Signup Form
+      </h1>
+      <TextInput
+        label="First Name"
+        id="firstName"
+        type="text"
+        formik={formik}
+      />
+      <TextInput label="Last Name" id="lastName" type="text" formik={formik} />
+      <TextInput
+        label="Email Address"
+        id="email"
+        type="email"
+        formik={formik}
+      />
+      <SelectInput
+        label="Favourite Team"
+        id="team"
+        options={[
+          "Kathmandu Rayzrs",
+          "Biratnagar City FC",
+          "Lalitpur City FC",
+          "Pokhara Thunders",
+          "Dhangadhi FC",
+          "Chitwan FC",
+          "Butwal Lumbini FC",
+          "FC Far West",
+        ]}
+        formik={formik}
+      />
+      <RadioGroup
+        label="Gender"
+        name="gender"
+        options={["Male", "Female"]}
+        formik={formik}
+      />
+      <TextInput
+        label="Password"
+        id="password"
+        type="password"
+        formik={formik}
+      />
+      <TextInput
+        label="Confirm Password"
+        id="confirmpassword"
+        type="password"
+        formik={formik}
+      />
+      <Checkbox
+        label="I agree to the terms and conditions"
+        id="agreeToTerms"
+        formik={formik}
+      />
       <button
         type="submit"
         className="w-full py-3 px-6 text-white rounded-md transition-all"
