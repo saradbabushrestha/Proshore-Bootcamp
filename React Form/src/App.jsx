@@ -6,7 +6,7 @@ export default function App() {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleFormSubmit = () => {
-    setIsSubmitted(true); // After signup, switch to login form
+    setIsSubmitted(true);
   };
 
   return (

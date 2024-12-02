@@ -1,5 +1,4 @@
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import TextInput from "../components/TextInput";
 
 export const LoginForm = ({ onLoginSuccess }) => {
@@ -8,25 +7,9 @@ export const LoginForm = ({ onLoginSuccess }) => {
       email: "",
       password: "",
     },
-    validationSchema: Yup.object({
-      email: Yup.string()
-        .email("Invalid email address")
-        .required("Email is required"),
-      password: Yup.string().required("Password is required"),
-    }),
     onSubmit: (values) => {
-      const storedUser = JSON.parse(localStorage.getItem("userData"));
-
-      if (
-        storedUser &&
-        storedUser.email === values.email &&
-        storedUser.password === values.password
-      ) {
-        alert("Login successful!");
-        onLoginSuccess();
-      } else {
-        alert("Invalid email or password.");
-      }
+      alert(`Email: ${values.email}\nPassword: ${values.password}`);
+      onLoginSuccess();
     },
   });
 
