@@ -2,7 +2,7 @@ import React from "react";
 
 const SelectInput = ({ label, id, options, formik }) => (
   <div>
-    <label htmlFor={id} className="block text-white font-medium mb-1">
+    <label htmlFor={id} className="block text-gray-800 font-medium mb-1">
       {label}
     </label>
     <select

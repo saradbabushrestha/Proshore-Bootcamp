@@ -1,30 +1,29 @@
-import React, { useState } from "react";
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { SignupForm } from "./Pages/Signup";
 import { LoginForm } from "./Pages/LoginForm";
+import Home from "./Pages/Home";
 
 export default function App() {
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const handleFormSubmit = () => {
-    setIsSubmitted(true);
-  };
-
   return (
-    <div
-      className="min-h-screen flex items-center justify-center bg-gray-100"
-      style={{
-        backgroundImage: `url('/pl.webp')`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      <div className="w-full max-w-lg backdrop-blur-lg rounded-lg shadow-lg p-8 border border-gray-200">
-        {isSubmitted ? (
-          <LoginForm />
-        ) : (
-          <SignupForm onSubmit={handleFormSubmit} />
-        )}
+    <Router>
+      <div
+        className="min-h-screen flex items-center justify-center bg-gray-100"
+        style={{
+          backgroundImage: `url('/pl.webp')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="w-full max-w-lx p-8 bg-opacity-70 rounded-lg shadow-lg space-y-6">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/signup" element={<SignupForm />} />
+
+            <Route path="/login" element={<LoginForm />} />
+          </Routes>
+        </div>
       </div>
-    </div>
+    </Router>
   );
 }

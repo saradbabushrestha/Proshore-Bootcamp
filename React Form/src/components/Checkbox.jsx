@@ -15,7 +15,7 @@ const Checkbox = ({ label, id, formik }) => (
           : "text-blue-500 border-gray-300 focus:ring-blue-500"
       }`}
     />
-    <label htmlFor={id} className="ml-2 text-white">
+    <label htmlFor={id} className="ml-2 text-gray-800">
       {label}
     </label>
     {formik.errors[id] && formik.touched[id] && (

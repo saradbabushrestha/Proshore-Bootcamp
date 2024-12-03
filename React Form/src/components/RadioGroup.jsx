@@ -2,7 +2,7 @@ import React from "react";
 
 const RadioGroup = ({ label, name, options, formik }) => (
   <div>
-    <label className="block text-white font-medium mb-1">{label}</label>
+    <label className="block text-gray-800 font-medium mb-1">{label}</label>
     <div className="flex space-x-4">
       {options.map((option) => (
         <div key={option} className="flex items-center">
@@ -22,7 +22,7 @@ const RadioGroup = ({ label, name, options, formik }) => (
           />
           <label
             htmlFor={`${name}-${option}`}
-            className="ml-2 text-white capitalize"
+            className="ml-2 text-gray-800 capitalize"
           >
             {option}
           </label>
