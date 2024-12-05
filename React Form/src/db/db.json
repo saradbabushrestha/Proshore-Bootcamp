@@ -1,0 +1,33 @@
+{
+  "users": [
+    {
+      "id": "3d82",
+      "firstName": "Sarad",
+      "lastName": "Shrestha",
+      "email": "saradshrestha001@gmail.com",
+      "team": "Dhangadhi FC",
+      "gender": "Male",
+      "password": "12345678"
+    },
+    {
+      "id": "0157",
+      "firstName": "Ram",
+      "lastName": "Bahadur",
+      "email": "saradshrestha1992@gmail.com",
+      "team": "Lalitpur City FC",
+      "gender": "Male",
+      "password": "12345678"
+    },
+    {
+      "id": "349c",
+      "firstName": "Sarad",
+      "lastName": "Shrestha",
+      "email": "saradshrestha001@gmail.com",
+      "team": "Pokhara Thunders",
+      "gender": "Male",
+      "password": "12345678",
+      "nepaliDate": "2081-08-19",
+      "englishDate": "2024-12-04"
+    }
+  ]
+}

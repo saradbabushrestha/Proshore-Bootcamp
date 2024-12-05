@@ -1,11 +1,13 @@
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import TextInput from "../components/TextInput.jsx";
 import SelectInput from "../components/SelectInput.jsx";
 import RadioGroup from "../components/RadioGroup.jsx";
 import Checkbox from "../components/Checkbox.jsx";
+import DateOfBirth from "../components/DateOfBirth.jsx";
 
 export const SignupForm = () => {
   const formik = useFormik({
@@ -14,10 +16,12 @@ export const SignupForm = () => {
       lastName: "",
       email: "",
       team: "",
-      gender: "",
+      gender: "Other",
       password: "",
       confirmpassword: "",
       agreeToTerms: false,
+      nepaliDate: "",
+      englishDate: "",
     },
     validationSchema: Yup.object({
       firstName: Yup.string().required("First Name is required").min(2),
@@ -35,7 +39,7 @@ export const SignupForm = () => {
         .required("Confirm Password is required"),
       agreeToTerms: Yup.bool().oneOf([true], "You must accept the terms"),
     }),
-    onSubmit: (values) => {
+    onSubmit: async (values, { resetForm }) => {
       const userData = {
         firstName: values.firstName,
         lastName: values.lastName,
@@ -43,12 +47,23 @@ export const SignupForm = () => {
         team: values.team,
         gender: values.gender,
         password: values.password,
+        nepaliDate: values.nepaliDate,
+        englishDate: values.englishDate,
       };
 
-      localStorage.setItem("userData", JSON.stringify(userData));
+      try {
+        const response = await axios.post(
+          "http://localhost:3001/users",
+          userData
+        );
+        console.log("Data saved successfully:", response.data);
 
-      alert("Signup successful! Data saved to local storage.");
-      formik.resetForm();
+        alert("Signup successful! Data saved to JSON server.");
+        resetForm();
+      } catch (error) {
+        console.error("Error saving data to JSON server:", error);
+        alert("Error saving data. Please try again.");
+      }
     },
   });
 
@@ -110,10 +125,11 @@ export const SignupForm = () => {
           <RadioGroup
             label="Gender"
             name="gender"
-            options={["Male", "Female"]}
+            options={["Male", "Female", "Other"]}
             formik={formik}
             labelClass="text-gray-800"
           />
+          <DateOfBirth formik={formik} />
 
           <div className="grid grid-cols-2 gap-6">
             <TextInput

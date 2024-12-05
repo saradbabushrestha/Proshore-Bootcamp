@@ -1,10 +1,13 @@
 import React from "react";
 import { useFormik } from "formik";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import TextInput from "../components/TextInput";
 import * as Yup from "yup";
 
-export const LoginForm = ({ onLoginSuccess }) => {
+export const LoginForm = () => {
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -16,17 +19,24 @@ export const LoginForm = ({ onLoginSuccess }) => {
         .required("Email is required"),
       password: Yup.string().required("Password is required"),
     }),
-    onSubmit: (values) => {
-      const storedUser = JSON.parse(localStorage.getItem("userData"));
-      if (
-        storedUser &&
-        storedUser.email === values.email &&
-        storedUser.password === values.password
-      ) {
-        alert("Login successful!");
-        onLoginSuccess();
-      } else {
-        alert("Invalid email or password.");
+    onSubmit: async (values) => {
+      try {
+        const response = await axios.get("http://localhost:3001/users");
+        const users = response.data;
+
+        const user = users.find(
+          (user) =>
+            user.email === values.email && user.password === values.password
+        );
+
+        if (user) {
+          alert("Login successful!");
+          navigate("/landingpage");
+        } else {
+          alert("Invalid email or password.");
+        }
+      } catch (error) {
+        console.error("Error fetching data from JSON server:", error);
       }
     },
   });

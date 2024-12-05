@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { SignupForm } from "./Pages/Signup";
 import { LoginForm } from "./Pages/LoginForm";
 import Home from "./Pages/Home";
+import LandingPage from "./Pages/LandingPage";
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
             <Route path="/signup" element={<SignupForm />} />
 
             <Route path="/login" element={<LoginForm />} />
+            <Route path="/landingpage" element={<LandingPage />} />
           </Routes>
         </div>
       </div>
