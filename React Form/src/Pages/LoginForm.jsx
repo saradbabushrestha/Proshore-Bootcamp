@@ -34,6 +34,8 @@ export const LoginForm = () => {
         if (user) {
           alert("Login successful!");
           dispatch(setUser(user));
+          localStorage.setItem("authToken", user.token);
+          localStorage.setItem("loggedInUser", JSON.stringify(user));
           navigate("/landingpage");
         } else {
           alert("Invalid email or password.");

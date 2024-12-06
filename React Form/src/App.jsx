@@ -6,6 +6,10 @@ import Home from "./Pages/Home";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LandingPage from "./Pages/LandingPage";
 import NotFound from "./Pages/NotFound";
+import Breadcrumb from "./Pages/Breadcrumb";
+import Teams from "./Pages/Teams";
+import Players from "./Pages/Players";
+import Showcase from "./Pages/Showcase";
 
 export default function App() {
   return (
@@ -23,6 +27,11 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/signup" element={<SignupForm />} />
             <Route path="/login" element={<LoginForm />} />
+            <Route path="/breadcrumbs" element={<Breadcrumb />} />
+            <Route path="/showcase" element={<Showcase />} />
+            <Route path="/showcase/team" element={<Teams />} />
+            <Route path="/showcase/team/player" element={<Players />} />
+
             <Route path="*" element={<NotFound />} />
             <Route
               path="/landingpage"

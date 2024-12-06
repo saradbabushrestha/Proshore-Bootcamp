@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { setUser, clearUser } from "../redux/userSlice";
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const loggedInUser = useSelector((state) => state.user.loggedInUser);
   const [editorData, setEditorData] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -13,28 +15,31 @@ const LandingPage = () => {
 
   useEffect(() => {
     if (!loggedInUser) {
-      alert("Unauthorized access! Please log in.");
-      navigate("/");
+      const storedToken = localStorage.getItem("authToken");
+      if (storedToken) {
+        const userData = JSON.parse(localStorage.getItem("loggedInUser"));
+        dispatch(setUser(userData));
+        setAuthToken(storedToken);
+      } else {
+        alert("Unauthorized access! Please log in.");
+        navigate("/");
+      }
     } else {
       setIsLoading(false);
       setAuthToken(loggedInUser.token);
     }
-  }, [loggedInUser, navigate]);
-
-  useEffect(() => {
-    if (authToken) {
-      const isValidJWT = /^[A-Za-z0-9-._~+/]+=*$/.test(authToken);
-      if (!isValidJWT) {
-        console.error("Invalid JWT format:", authToken);
-        alert("Invalid JWT token format.");
-        return;
-      }
-    }
-  }, [authToken]);
+  }, [loggedInUser, dispatch, navigate]);
 
   const handleEditorChange = (event, editor) => {
     const data = editor.getData();
     setEditorData(data);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("loggedInUser");
+    dispatch(clearUser());
+    navigate("/");
   };
 
   return (
@@ -68,6 +73,12 @@ const LandingPage = () => {
               dangerouslySetInnerHTML={{ __html: editorData }}
             ></div>
           </div>
+          <button
+            onClick={handleLogout}
+            className="mt-4 p-2 bg-red-600 text-white rounded"
+          >
+            Logout
+          </button>
         </>
       ) : (
         <p className="text-lg text-red-500">
