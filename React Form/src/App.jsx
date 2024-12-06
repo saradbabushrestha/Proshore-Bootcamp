@@ -1,9 +1,11 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { SignupForm } from "./Pages/Signup";
+import { SignupForm } from "./pages/Signup";
 import { LoginForm } from "./Pages/LoginForm";
 import Home from "./Pages/Home";
+import ProtectedRoute from "./components/ProtectedRoute";
 import LandingPage from "./Pages/LandingPage";
+import NotFound from "./Pages/NotFound";
 
 export default function App() {
   return (
@@ -20,9 +22,12 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/signup" element={<SignupForm />} />
-
             <Route path="/login" element={<LoginForm />} />
-            <Route path="/landingpage" element={<LandingPage />} />
+            <Route path="*" element={<NotFound />} />
+            <Route
+              path="/landingpage"
+              element={<ProtectedRoute element={<LandingPage />} />}
+            />
           </Routes>
         </div>
       </div>

@@ -28,6 +28,17 @@
       "password": "12345678",
       "nepaliDate": "2081-08-19",
       "englishDate": "2024-12-04"
+    },
+    {
+      "id": "1cc1",
+      "firstName": "Sarad",
+      "lastName": "Shrestha",
+      "email": "saradshrestha001@webdevsimplified.com",
+      "team": "Biratnagar City FC",
+      "gender": "Male",
+      "password": "12345678",
+      "nepaliDate": "2081-09-08",
+      "englishDate": "2024-12-23"
     }
   ]
 }

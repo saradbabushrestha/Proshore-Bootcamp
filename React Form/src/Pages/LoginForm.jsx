@@ -2,11 +2,13 @@ import React from "react";
 import { useFormik } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import TextInput from "../components/TextInput";
+import { useDispatch } from "react-redux";
 import * as Yup from "yup";
+import { setUser } from "../redux/userSlice.js";
 
 export const LoginForm = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const formik = useFormik({
     initialValues: {
@@ -31,6 +33,7 @@ export const LoginForm = () => {
 
         if (user) {
           alert("Login successful!");
+          dispatch(setUser(user));
           navigate("/landingpage");
         } else {
           alert("Invalid email or password.");
@@ -42,41 +45,49 @@ export const LoginForm = () => {
   });
 
   return (
-    <div>
-      <form
-        onSubmit={formik.handleSubmit}
-        className="w-full max-w-sm mx-auto p-8 bg-white bg-opacity-100 rounded-lg shadow-lg space-y-6"
-      >
-        <h1 className="text-3xl font-semibold text-center text-gray-800 mb-4">
-          Welcome Back
-        </h1>
-        <p className="text-center text-sm text-gray-500 mb-4">
-          Please enter your credentials to continue
-        </p>
+    <div className="w-full max-w-sm mx-auto p-8 bg-white rounded-lg shadow-md">
+      <form onSubmit={formik.handleSubmit}>
+        <h1 className="text-3xl font-semibold text-center mb-4">Login</h1>
 
-        <TextInput
-          label="Email Address"
-          id="email"
-          type="email"
-          formik={formik}
-        />
-        <TextInput
-          label="Password"
-          id="password"
-          type="password"
-          formik={formik}
-        />
+        <div className="mb-4">
+          <label htmlFor="email" className="block text-sm font-medium">
+            Email Address
+          </label>
+          <input
+            id="email"
+            type="email"
+            {...formik.getFieldProps("email")}
+            className="w-full p-2 border rounded"
+          />
+          {formik.touched.email && formik.errors.email && (
+            <div className="text-red-500 text-sm">{formik.errors.email}</div>
+          )}
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="password" className="block text-sm font-medium">
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            {...formik.getFieldProps("password")}
+            className="w-full p-2 border rounded"
+          />
+          {formik.touched.password && formik.errors.password && (
+            <div className="text-red-500 text-sm">{formik.errors.password}</div>
+          )}
+        </div>
 
         <button
           type="submit"
-          className="w-full py-3 text-white font-semibold bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
+          className="w-full p-2 bg-blue-600 text-white rounded"
         >
           Login
         </button>
-
-        <p className="text-center text-sm text-gray-500 mt-4">
+        <p className="text-center mt-4">
           Don't have an account?{" "}
-          <Link to="/signup" className="text-blue-600 hover:underline">
+          <Link to="/signup" className="text-blue-600">
             Sign up here
           </Link>
         </p>
