@@ -42,6 +42,10 @@ const LandingPage = () => {
     navigate("/");
   };
 
+  const navigateToShowcase = () => {
+    navigate("/showcase");
+  };
+
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
       {isLoading ? (
@@ -73,12 +77,20 @@ const LandingPage = () => {
               dangerouslySetInnerHTML={{ __html: editorData }}
             ></div>
           </div>
-          <button
-            onClick={handleLogout}
-            className="mt-4 p-2 bg-red-600 text-white rounded"
-          >
-            Logout
-          </button>
+          <div className="mt-4 flex space-x-4">
+            <button
+              onClick={handleLogout}
+              className="p-2 bg-red-600 text-white rounded"
+            >
+              Logout
+            </button>
+            <button
+              onClick={navigateToShowcase}
+              className="p-2 bg-blue-600 text-white rounded"
+            >
+              Showcase
+            </button>
+          </div>
         </>
       ) : (
         <p className="text-lg text-red-500">
